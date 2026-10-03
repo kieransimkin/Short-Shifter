@@ -15,6 +15,18 @@ Keep the extracted folder in place. For an update, replace the files in your exi
 
 [Full browser-by-browser installation guide](https://kieransimkin.co.uk/short-shifter/#ss-install). Chromium browser compatibility depends on Manifest V3 APIs; Firefox and Safari are not supported by this ZIP. Real-browser compatibility across the listed browsers has not been certified.
 
+## Upgrading an existing installation
+
+1. Download the newest `short-shifter-<version>-chrome.zip` from [GitHub Releases](https://github.com/kieransimkin/Short-Shifter/releases/latest). Extract it to a temporary folder.
+2. Find the permanent Short Shifter folder you originally selected with **Load unpacked**. Your browser's extension details may show its path.
+3. Copy **all files and folders** from the new ZIP into that existing folder, replacing files when prompted. Keep the same folder path, and make sure `manifest.json` sits directly inside it. Do not copy the ZIP or add an extra nested folder. New releases may add scripts, so do not replace only `content.js`.
+4. Open your browser's extensions page (`chrome://extensions`, `brave://extensions`, `edge://extensions`, `vivaldi://extensions`, or Opera's Extensions page). Find **Short Shifter** and click **Reload** (the circular arrow). Keep Developer mode enabled if needed to see this control.
+5. Refresh **every open YouTube tab** so it receives the new content scripts. Open the popup and check your **Shorts visible** setting.
+6. Check the version on the extension's card or **Details** page against the release you downloaded. For version **1.0.2**, the extracted folder must include `detection.js`, `motion.js` and `content.js`, and the manifest must say `1.0.2`.
+
+Reloading the same installation preserves its locally stored visibility preference. Avoid removing and reinstalling it just to upgrade, because removal can clear those settings. There are no automatic updates for this manually installed version.
+
+If the version stays old, confirm that you replaced files in the folder your browser actually loaded, then click Reload again. If the browser reports a missing script, recopy the complete extracted release and check for an extra folder level. If YouTube still behaves like the old release, refresh the tab after reloading the extension.
 ## Development and verification
 
 Requires Node.js 24. No npm dependencies or image-conversion tools are required; PNG icons are included.
@@ -41,4 +53,5 @@ GitHub Actions checks the JavaScript, runs tests and builds downloadable extensi
 MIT. Not affiliated with YouTube, Google or the browser vendors.
 
 The finite sequence is tested at http://127.0.0.1:8767/tests/animation-regression.html using the actual motion/content scripts and mocked extension APIs.
+
 
