@@ -2,11 +2,11 @@
 
 Cover YouTube Shorts with a bouncing, winking poo.
 
-Short Shifter recognises Shorts shelves, cards, links and badges, including recommendations beside a video. It also retains a roughly 9:16 media fallback outside ordinary video recommendation cards. With **Shorts visible** switched off, matching content gets a dark, click-through cover. This is a visual cover: it does not stop playback, audio or navigation. The portrait fallback can also match non-Shorts media. Your preference is stored locally; there is no analytics or remote runtime service.
+Short Shifter recognises Shorts shelves, cards, links and badges, including recommendations beside a video. It also retains a roughly 9:16 media fallback outside ordinary video recommendation cards. With **Shorts visible** switched off, matching content is covered, the poo bounces three times, and its card collapses to zero height. The centred poo then winks and disappears. Turning visibility back on restores the original layout. Reduced-motion preferences skip the animation. This hides the card visually; it does not stop playback or audio. The portrait fallback can also match non-Shorts media. Your preference is stored locally; there is no analytics or remote runtime service.
 
 ## Free manual installation
 
-1. Download `short-shifter-1.0.1-chrome.zip` from [GitHub Releases](https://github.com/kieransimkin/Short-Shifter/releases/latest) and extract it to a permanent folder.
+1. Download `short-shifter-1.0.2-chrome.zip` from [GitHub Releases](https://github.com/kieransimkin/Short-Shifter/releases/latest) and extract it to a permanent folder.
 2. Open your browser's extensions page: `chrome://extensions`, `brave://extensions`, `edge://extensions`, `vivaldi://extensions`, or Opera's Extensions page.
 3. Turn on **Developer mode**, select **Load unpacked**, and choose the extracted folder containing `manifest.json`.
 4. Refresh YouTube and use the extension popup to switch **Shorts visible** on or off.
@@ -39,3 +39,6 @@ GitHub Actions checks the JavaScript, runs tests and builds downloadable extensi
 ## Licence
 
 MIT. Not affiliated with YouTube, Google or the browser vendors.
+
+The finite sequence is tested at http://127.0.0.1:8767/tests/animation-regression.html using the actual motion/content scripts and mocked extension APIs.
+

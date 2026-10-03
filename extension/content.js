@@ -16,7 +16,7 @@
     if (document.getElementById(STYLE_ID)) return;
     const style = document.createElement('style');
     style.id = STYLE_ID;
-    style.textContent = `.${OVERLAY_CLASS}{position:absolute!important;z-index:2147483647!important;display:flex!important;align-items:center!important;justify-content:center!important;overflow:hidden!important;background:radial-gradient(circle at 50% 45%,#181818 0%,#090909 70%)!important;border-radius:inherit!important;pointer-events:none!important;box-sizing:border-box!important}.${OVERLAY_CLASS} .short-shifter-poo{display:block!important;font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif!important;font-size:clamp(28px,22%,76px)!important;line-height:1!important;user-select:none!important;animation:short-shifter-bounce 850ms cubic-bezier(.25,.8,.25,1) infinite!important;transform-origin:center bottom!important}.${OVERLAY_CLASS} .short-shifter-face{position:absolute!important;width:.8em!important;height:.8em!important;display:flex!important;align-items:center!important;justify-content:center!important;font-size:.5em!important;transform:translate(.15em,-.15em) scaleX(0)!important;animation:short-shifter-wink 3s ease-in-out infinite!important}@keyframes short-shifter-bounce{0%,100%{transform:translateY(5px) rotate(-3deg)}50%{transform:translateY(-8px) rotate(3deg)}}@keyframes short-shifter-wink{0%,72%,100%{transform:translate(.15em,-.15em) scaleX(0)}75%,82%{transform:translate(.15em,-.15em) scaleX(1)}}`;
+    style.textContent = `.${OVERLAY_CLASS}{position:absolute!important;z-index:2147483646!important;background:#101010!important;pointer-events:none!important;box-sizing:border-box!important;border-radius:inherit!important}.short-shifter-mascot{position:fixed!important;z-index:2147483647!important;pointer-events:none!important;transform:translate(-50%,-50%);width:64px;height:64px;display:grid!important;place-items:center!important}.short-shifter-poo{position:relative!important;display:block!important;font:56px/1 "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif!important;user-select:none!important}.short-shifter-face{position:absolute!important;inset:0!important;display:grid!important;place-items:center!important;font-size:28px!important;opacity:0;pointer-events:none!important}`;
     document.documentElement.appendChild(style);
   }
 
@@ -40,12 +40,14 @@
       if (isNearNineBySixteen(rect.width, rect.height)) found.add(media);
     }
     // One cover per shelf/card, never a pile of covers for nested thumbnails.
+    for (const target of overlays.keys()) if (target.isConnected && target.matches('img,video,canvas,ytd-thumbnail,yt-thumbnail-view-model,a#thumbnail')) found.add(target);
     return [...found].filter(target => ![...found].some(parent => parent !== target && parent.contains(target)));
   }
 
   function remove(target) {
     const entry = overlays.get(target);
     if (!entry) return;
+    entry.motion.restore();
     entry.overlay.remove();
     if (entry.changedPosition && entry.host.style.position === 'relative') entry.host.style.position = entry.oldPosition;
     overlays.delete(target);
@@ -53,7 +55,7 @@
 
   function cover(target) {
     const rect = target.getBoundingClientRect();
-    if (rect.width < 30 || rect.height < 50) { remove(target); return; }
+    if (!overlays.has(target) && (rect.width < 30 || rect.height < 50)) return;
     let entry = overlays.get(target);
     // Images, videos and canvases cannot reliably display child elements.
     const host = target.matches('img,video,canvas') ? target.parentElement : target;
@@ -72,12 +74,26 @@
       const face = document.createElement('span');
       face.className = 'short-shifter-face';
       face.textContent = '😉';
-      overlay.append(poo, face);
+      const mascot = document.createElement('div');
+      mascot.className = 'short-shifter-mascot';
+      poo.appendChild(face);
+      mascot.appendChild(poo);
+      document.documentElement.appendChild(mascot);
       host.appendChild(overlay);
-      entry = { overlay, host, oldPosition, changedPosition };
+      entry = { overlay, host, oldPosition, changedPosition, mascot, identity: identity(target) };
       overlays.set(target, entry);
+      entry.motion = new globalThis.ShortShifterMotion(host, mascot, () => position(entry, target));
     }
+    position(entry, target);
+  }
+
+  function position(entry, target) {
+    const {host} = entry;
+    const rect = target.getBoundingClientRect();
     const hostRect = host.getBoundingClientRect();
+    const centre = host === target ? rect : hostRect;
+    entry.mascot.style.left = `${centre.left + centre.width / 2}px`;
+    entry.mascot.style.top = `${centre.top + centre.height / 2}px`;
     Object.assign(entry.overlay.style, {
       left: `${rect.left - hostRect.left - host.clientLeft + host.scrollLeft}px`,
       top: `${rect.top - hostRect.top - host.clientTop + host.scrollTop}px`,
@@ -85,7 +101,11 @@
     });
   }
 
+  function identity(target) {
+    return [...target.querySelectorAll('a[href]')].map(a => a.getAttribute('href')).join('|') || target.getAttribute('src') || '';
+  }
   function scan() {
+    for (const [target, entry] of overlays) if (!target.isConnected || identity(target) !== entry.identity) remove(target);
     scanTimer = null;
     injectStyles();
     const selected = new Set(shortsVisible ? [] : targets());
@@ -104,7 +124,7 @@
   }
   function schedule() { if (scanTimer === null) scanTimer = setTimeout(scan, 150); }
   function ownNode(node) {
-    return node instanceof Element && (node.id === STYLE_ID || node.matches(`.${OVERLAY_CLASS}`) || !!node.closest(`.${OVERLAY_CLASS}`));
+    return node instanceof Element && (node.id === STYLE_ID || node.matches(`.${OVERLAY_CLASS},.short-shifter-mascot`) || !!node.closest(`.${OVERLAY_CLASS},.short-shifter-mascot`));
   }
   function start() {
     resizeObserver = new ResizeObserver(schedule);
@@ -135,3 +155,5 @@
   });
   init();
 })();
+
+
