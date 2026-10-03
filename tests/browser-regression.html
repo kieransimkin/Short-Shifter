@@ -1,0 +1,55 @@
+<!doctype html><meta charset="utf-8"><title>Short Shifter sidebar regression</title>
+<style>body{font:16px system-ui;background:#eee;color:#222;padding:20px}#results{background:white;padding:18px;white-space:pre-wrap}#fixtures{display:flex;gap:20px;flex-wrap:wrap}ytd-reel-shelf-renderer,ytm-shorts-lockup-view-model-v2,ytd-compact-video-renderer,yt-lockup-view-model,grid-shelf-view-model{display:block;position:relative;width:250px;min-height:100px;background:#b9e0ff;margin:10px;padding:10px;box-sizing:border-box}a{display:block}img{display:block;width:160px;height:90px;background:#446}#portrait img{width:90px;height:160px}</style>
+<h1>Short Shifter v1.0.1 sidebar regression</h1><pre id="results">Running actual extension content scripts…</pre>
+<div id="fixtures">
+<ytd-reel-shelf-renderer id="shelf"><h2>Shorts shelf</h2><ytm-shorts-lockup-view-model-v2><a href="/shorts/shelf"><img alt="Short"></a></ytm-shorts-lockup-view-model-v2></ytd-reel-shelf-renderer>
+<ytm-shorts-lockup-view-model-v2 id="modern"><a href="/shorts/modern"><img alt="Modern card"></a></ytm-shorts-lockup-view-model-v2>
+<ytd-compact-video-renderer id="legacy"><a href="/shorts/legacy"><img alt="Landscape sidebar Short"></a></ytd-compact-video-renderer>
+<yt-lockup-view-model id="badge"><a href="/watch?v=badge"><img alt="Badge Short"></a><span overlay-style="SHORTS">Shorts</span></yt-lockup-view-model>
+<grid-shelf-view-model id="grid"><yt-lockup-view-model><a href="/shorts/grid"><img alt="Grid Short"></a></yt-lockup-view-model></grid-shelf-view-model>
+<yt-lockup-view-model id="ordinary"><a href="/watch?v=ordinary"><img alt="Ordinary video"></a></yt-lockup-view-model>
+<div id="portrait"><img alt="Portrait fallback"></div>
+<nav><a href="/shorts/">Shorts navigation remains available</a></nav>
+</div>
+<script>
+const listeners={};
+window.chrome={storage:{local:{get:async()=>({shortsVisible:false})},onChanged:{addListener:f=>listeners.storage=f}},runtime:{onMessage:{addListener:f=>listeners.message=f}}};
+</script>
+<script src="../extension/detection.js"></script><script src="../extension/content.js"></script>
+<script>
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const covered=id=>!!document.getElementById(id).querySelector('.short-shifter-overlay');
+const lines=[];let failures=0;
+function check(name,condition){lines.push(`${condition?'PASS':'FAIL'} ${name}`);if(!condition)failures++;document.getElementById('results').textContent=lines.join('\n');}
+(async()=>{
+ await sleep(400);
+ for(const id of ['shelf','modern','legacy','badge','grid','portrait'])check(`covers ${id}`,covered(id));
+ check('preserves ordinary video',!covered('ordinary'));
+ check('nested shelf has exactly one overlay',document.getElementById('shelf').querySelectorAll('.short-shifter-overlay').length===1);
+ check('six initial covers',document.querySelectorAll('.short-shifter-overlay').length===6);
+ const legacy=document.getElementById('legacy');
+ legacy.style.width='330px';await sleep(350);
+ check('updates overlay dimensions after card resize',Math.abs(legacy.getBoundingClientRect().width-legacy.querySelector('.short-shifter-overlay').getBoundingClientRect().width)<1);
+ legacy.querySelector('a').setAttribute('href','/watch?v=recycled');await sleep(350);
+ check('removes cover when sidebar card is recycled into normal video',!covered('legacy'));
+ legacy.querySelector('a').setAttribute('href','/shorts/recycled');await sleep(350);
+ check('detects recycled Short from href change',covered('legacy'));
+ const delayed=document.createElement('ytd-compact-video-renderer');delayed.id='delayed';delayed.innerHTML='<a href="/shorts/delayed"><img alt="Delayed Short"></a>';document.getElementById('fixtures').append(delayed);await sleep(350);
+ check('covers delayed sidebar recommendation',covered('delayed'));
+ const skeleton=document.createElement('ytm-shorts-lockup-view-model-v2');skeleton.id='skeleton';skeleton.style.display='none';skeleton.innerHTML='<a href="/shorts/skeleton">Loading Short</a>';document.getElementById('fixtures').append(skeleton);await sleep(350);
+ check('does not cover an invisible skeleton',!covered('skeleton'));
+ skeleton.style.display='block';await sleep(350);
+ check('covers skeleton when layout becomes visible without child mutation',covered('skeleton'));
+ listeners.message({type:'SHORTS_VISIBILITY_CHANGED',shortsVisible:true});await sleep(200);
+ check('visible toggle removes every cover',document.querySelectorAll('.short-shifter-overlay').length===0);
+ check('restores inline positioning when removed',document.getElementById('portrait').style.position==='');
+ listeners.storage({shortsVisible:{newValue:false}},'local');await sleep(200);
+ check('storage change reapplies covers across tabs',covered('delayed')&&covered('shelf'));
+ document.dispatchEvent(new Event('yt-navigate-finish'));await sleep(350);
+ check('SPA navigation preserves coverage',covered('delayed')&&!covered('ordinary'));
+ let ownMutations=0;const observer=new MutationObserver(rs=>ownMutations+=rs.filter(r=>r.type==='childList').length);observer.observe(document.getElementById('fixtures'),{subtree:true,childList:true});await sleep(600);observer.disconnect();
+ check('idle scans do not recreate overlays',ownMutations===0);
+ window.regressionResult={failures,checks:lines.length,lines};
+ document.getElementById('results').textContent+=`\n\n${lines.length-failures}/${lines.length} passed`;
+})();
+</script>

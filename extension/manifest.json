@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Short Shifter",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Hide YouTube Shorts behind a bouncing, winking poo.",
   "homepage_url": "https://github.com/kieransimkin/Short-Shifter",
   "permissions": [
@@ -45,6 +45,7 @@
         "https://m.youtube.com/*"
       ],
       "js": [
+        "detection.js",
         "content.js"
       ],
       "run_at": "document_idle"
