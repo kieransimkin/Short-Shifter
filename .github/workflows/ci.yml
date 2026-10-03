@@ -1,0 +1,25 @@
+name: CI
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 24 }
+      - run: npm run check
+      - run: npm test
+      - run: npm run build
+      - name: Validate build
+        run: test -f dist/manifest.json && test -f dist/content.js && test -f dist/popup.html
+      - name: Package
+        run: cd dist && zip -qr ../short-shifter.zip .
+      - uses: actions/upload-artifact@v4
+        with:
+          name: short-shifter
+          path: short-shifter.zip

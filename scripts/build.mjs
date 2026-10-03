@@ -1,0 +1,14 @@
+import { mkdir, cp, rm, readFile, writeFile, access } from 'node:fs/promises';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+const root = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
+const source = path.join(root, 'extension');
+const dist = path.join(root, 'dist');
+for (const size of [16,32,48,128]) await access(path.join(source,'icons',`icon-${size}.png`));
+await rm(dist,{recursive:true,force:true});
+await mkdir(dist,{recursive:true});
+await cp(source,dist,{recursive:true});
+const manifest=JSON.parse(await readFile(path.join(dist,'manifest.json'),'utf8'));
+delete manifest.browser_specific_settings;
+await writeFile(path.join(dist,'manifest.json'),JSON.stringify(manifest,null,2)+'\n');
+console.log(`Built ${manifest.name} v${manifest.version} for Chrome and Brave`);

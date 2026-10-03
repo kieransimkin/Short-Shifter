@@ -1,0 +1,6 @@
+"use strict";
+const toggle=document.getElementById("toggle"),description=document.getElementById("description"),siteStatus=document.getElementById("site-status"),notYouTube=document.getElementById("not-youtube");let currentTab=null;
+function isYouTube(url){try{return ["youtube.com","www.youtube.com","m.youtube.com"].includes(new URL(url).hostname)}catch{return false}}
+function updateDescription(){description.textContent=toggle.checked?"Shorts are visible":"Shorts are hidden"}
+async function initialise(){const tabs=await chrome.tabs.query({active:true,currentWindow:true});currentTab=tabs[0];const onYouTube=currentTab?.url&&isYouTube(currentTab.url);if(!onYouTube){siteStatus.textContent="Not on YouTube";notYouTube.hidden=false;toggle.disabled=true;return}siteStatus.textContent="YouTube detected";notYouTube.hidden=true;const settings=await chrome.storage.local.get({shortsVisible:false});toggle.checked=settings.shortsVisible;toggle.disabled=false;updateDescription()}
+toggle.addEventListener("change",async()=>{const shortsVisible=toggle.checked;await chrome.storage.local.set({shortsVisible});updateDescription();if(!currentTab?.id)return;try{await chrome.tabs.sendMessage(currentTab.id,{type:"SHORTS_VISIBILITY_CHANGED",shortsVisible})}catch{}});initialise();
