@@ -3,6 +3,5 @@
 <h1>Three bounces → collapse → wink → disappear</h1><button id="replay">Replay</button><p>Three bounces, smooth collapse, centred wink, then gone. This is a sanitised test layout, not live YouTube.</p>
 <ytd-compact-video-renderer id="short"><a href="/shorts/demo">Illustrative Short</a></ytd-compact-video-renderer>
 <ytd-compact-video-renderer id="ordinary"><a href="/watch?v=ordinary">Ordinary recommendation stays visible</a></ytd-compact-video-renderer>
-<script>const listeners={};window.chrome={storage:{local:{get:async()=>({shortsVisible:false})},onChanged:{addListener:f=>listeners.storage=f}},runtime:{onMessage:{addListener:f=>listeners.message=f}}};document.getElementById('replay').onclick=()=>location.reload();</script>
+<script>const listeners={};window.chrome={storage:{local:{get:async()=>({shortsVisible:false})},onChanged:{addListener:f=>listeners.storage=f}},runtime:{getURL:p=>new URL('../extension/'+p,location.href).href,onMessage:{addListener:f=>listeners.message=f}}};document.getElementById('replay').onclick=()=>location.reload();</script>
 <script src="../extension/detection.js"></script><script src="../extension/motion.js"></script><script src="../extension/content.js"></script>
-

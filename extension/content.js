@@ -16,7 +16,7 @@
     if (document.getElementById(STYLE_ID)) return;
     const style = document.createElement('style');
     style.id = STYLE_ID;
-    style.textContent = `.${OVERLAY_CLASS}{position:absolute!important;z-index:2147483646!important;background:#101010!important;pointer-events:none!important;box-sizing:border-box!important;border-radius:inherit!important}.short-shifter-mascot{position:fixed!important;z-index:2147483647!important;pointer-events:none!important;transform:translate(-50%,-50%);width:64px;height:64px;display:grid!important;place-items:center!important}.short-shifter-poo{position:relative!important;display:block!important;font:56px/1 "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif!important;user-select:none!important}.short-shifter-face{position:absolute!important;inset:0!important;display:grid!important;place-items:center!important;font-size:28px!important;opacity:0;pointer-events:none!important}`;
+    style.textContent = `.${OVERLAY_CLASS}{position:absolute!important;z-index:2147483646!important;background:#101010!important;pointer-events:none!important;box-sizing:border-box!important;border-radius:inherit!important}.short-shifter-mascot{position:fixed!important;z-index:2147483647!important;pointer-events:none!important;transform:translate(-50%,-50%);width:64px;height:64px;display:grid!important;place-items:center!important}.short-shifter-poo{display:block!important;width:64px!important;height:64px!important;max-width:none!important;object-fit:contain!important;user-select:none!important}`;
     document.documentElement.appendChild(style);
   }
 
@@ -68,15 +68,12 @@
       const overlay = document.createElement('div');
       overlay.className = OVERLAY_CLASS;
       overlay.setAttribute('aria-label', 'YouTube Short hidden');
-      const poo = document.createElement('span');
+      const poo = document.createElement('img');
       poo.className = 'short-shifter-poo';
-      poo.textContent = '💩';
-      const face = document.createElement('span');
-      face.className = 'short-shifter-face';
-      face.textContent = '😉';
+      poo.src = chrome.runtime.getURL('assets/poo-neutral.png'); poo.alt = ''; poo.width = 64; poo.height = 64;
       const mascot = document.createElement('div');
       mascot.className = 'short-shifter-mascot';
-      poo.appendChild(face);
+
       mascot.appendChild(poo);
       document.documentElement.appendChild(mascot);
       host.appendChild(overlay);
@@ -155,5 +152,3 @@
   });
   init();
 })();
-
-

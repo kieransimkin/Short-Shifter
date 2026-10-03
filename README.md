@@ -6,7 +6,7 @@ Short Shifter recognises Shorts shelves, cards, links and badges, including reco
 
 ## Free manual installation
 
-1. Download `short-shifter-1.0.2-chrome.zip` from [GitHub Releases](https://github.com/kieransimkin/Short-Shifter/releases/latest) and extract it to a permanent folder.
+1. Download `short-shifter-1.0.3-chrome.zip` from [GitHub Releases](https://github.com/kieransimkin/Short-Shifter/releases/latest) and extract it to a permanent folder.
 2. Open your browser's extensions page: `chrome://extensions`, `brave://extensions`, `edge://extensions`, `vivaldi://extensions`, or Opera's Extensions page.
 3. Turn on **Developer mode**, select **Load unpacked**, and choose the extracted folder containing `manifest.json`.
 4. Refresh YouTube and use the extension popup to switch **Shorts visible** on or off.
@@ -22,7 +22,7 @@ Keep the extracted folder in place. For an update, replace the files in your exi
 3. Copy **all files and folders** from the new ZIP into that existing folder, replacing files when prompted. Keep the same folder path, and make sure `manifest.json` sits directly inside it. Do not copy the ZIP or add an extra nested folder. New releases may add scripts, so do not replace only `content.js`.
 4. Open your browser's extensions page (`chrome://extensions`, `brave://extensions`, `edge://extensions`, `vivaldi://extensions`, or Opera's Extensions page). Find **Short Shifter** and click **Reload** (the circular arrow). Keep Developer mode enabled if needed to see this control.
 5. Refresh **every open YouTube tab** so it receives the new content scripts. Open the popup and check your **Shorts visible** setting.
-6. Check the version on the extension's card or **Details** page against the release you downloaded. For version **1.0.2**, the extracted folder must include `detection.js`, `motion.js` and `content.js`, and the manifest must say `1.0.2`.
+6. Check the version on the extension's card or **Details** page against the release you downloaded. For version **1.0.3**, the extracted folder must include `detection.js`, `motion.js`, `content.js` and the complete `assets` folder, and the manifest must say `1.0.3`.
 
 Reloading the same installation preserves its locally stored visibility preference. Avoid removing and reinstalling it just to upgrade, because removal can clear those settings. There are no automatic updates for this manually installed version.
 
@@ -53,5 +53,3 @@ GitHub Actions checks the JavaScript, runs tests and builds downloadable extensi
 MIT. Not affiliated with YouTube, Google or the browser vendors.
 
 The finite sequence is tested at http://127.0.0.1:8767/tests/animation-regression.html using the actual motion/content scripts and mocked extension APIs.
-
-

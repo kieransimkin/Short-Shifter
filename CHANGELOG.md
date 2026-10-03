@@ -1,3 +1,8 @@
+## 1.0.3 — 3 October 2026
+
+- Replace the separate winking face with a transparent, one-shot wink of the original poo illustration, including three intermediate eye positions.
+- Keep the same poo centred through three bounces, smooth collapse and final fade; restart each wink independently.
+
 # Changelog
 
 ## 1.0.2 — 3 October 2026
@@ -17,4 +22,3 @@
 - Preserve ordinary video recommendation cards unless they have an explicit Shorts signal.
 
 Existing portrait-media fallback remains outside ordinary recommendation cards. Covers remain click-through and do not stop playback or audio.
-

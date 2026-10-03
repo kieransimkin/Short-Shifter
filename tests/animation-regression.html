@@ -3,7 +3,7 @@
 <h1>Three bounces → collapse → wink → disappear</h1><button id="replay">Replay</button><pre id="results">Running…</pre>
 <ytd-compact-video-renderer id="short"><a href="/shorts/demo">Illustrative Short</a></ytd-compact-video-renderer>
 <ytd-compact-video-renderer id="ordinary"><a href="/watch?v=ordinary">Ordinary recommendation stays visible</a></ytd-compact-video-renderer>
-<script>const listeners={};window.chrome={storage:{local:{get:async()=>({shortsVisible:false})},onChanged:{addListener:f=>listeners.storage=f}},runtime:{onMessage:{addListener:f=>listeners.message=f}}};document.getElementById('replay').onclick=()=>location.reload();</script>
+<script>const listeners={};window.chrome={storage:{local:{get:async()=>({shortsVisible:false})},onChanged:{addListener:f=>listeners.storage=f}},runtime:{getURL:p=>new URL('../extension/'+p,location.href).href,onMessage:{addListener:f=>listeners.message=f}}};document.getElementById('replay').onclick=()=>location.reload();</script>
 <script src="../extension/detection.js"></script><script src="../extension/motion.js"></script><script src="../extension/content.js"></script>
 <script>
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));const out=document.getElementById('results');const short=document.getElementById('short');const originalStyle=short.getAttribute('style');let failures=0;const results=[];
@@ -13,13 +13,13 @@ function check(name,ok){results.push(`${ok?'PASS':'FAIL'} ${name}`);if(!ok)failu
  const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
  if(!reduced){
  check('exactly three finite 500ms bounces',bounce?.effect.getTiming().iterations===3&&bounce.effect.getTiming().duration===500);
- check('no wink during bounce',getComputedStyle(mascot.querySelector('.short-shifter-face')).opacity==='0');
+ check('no wink during bounce',mascot.querySelector('.short-shifter-poo').src.includes('poo-neutral.png'));
  await bounce.finished; await sleep(120);check('collapse follows third bounce',mascot.dataset.phase==='collapse');
  const midHeight=short.getBoundingClientRect().height;check('height reduces smoothly between endpoints',midHeight>0&&midHeight<200);
  await new Promise(requestAnimationFrame);const a=short.getBoundingClientRect(),b=mascot.getBoundingClientRect();check('mascot remains centred while shrinking',Math.abs((a.left+a.width/2)-(b.left+b.width/2))<2&&Math.abs((a.top+a.height/2)-(b.top+b.height/2))<8);
  const collapse=short.getAnimations()[0]; await collapse.finished; await sleep(100);check('wink comes after height reaches zero',mascot.dataset.phase==='wink'&&short.getBoundingClientRect().height<1);
- check('wink is visible',Number(getComputedStyle(mascot.querySelector('.short-shifter-face')).opacity)>.5);
- const wink=mascot.querySelector('.short-shifter-face').getAnimations()[0];await wink.finished; const fade=mascot.getAnimations()[0];if(fade)await fade.finished;for(let i=0;i<20&&mascot.isConnected;i++)await sleep(30);
+ check('wink is visible',mascot.querySelector('.short-shifter-poo').complete&&mascot.querySelector('.short-shifter-poo').naturalWidth===256&&mascot.querySelector('.short-shifter-poo').src.includes('poo-wink-once.gif?play='));
+ const wink=mascot.querySelector('.short-shifter-poo').getAnimations()[0];await wink.finished; const fade=mascot.getAnimations()[0];if(fade)await fade.finished;for(let i=0;i<20&&mascot.isConnected;i++)await sleep(30);
  }
  check('Short finishes at zero height',short.getBoundingClientRect().height===0);
  check('poo disappears',document.querySelectorAll('.short-shifter-mascot').length===0);
@@ -39,7 +39,3 @@ function check(name,ok){results.push(`${ok?'PASS':'FAIL'} ${name}`);if(!ok)failu
  out.textContent+=`\n\n${results.length-failures}/${results.length} passed (${reduced?'reduced motion':'normal motion'})`;
 })();
 </script>
-
-
-
-

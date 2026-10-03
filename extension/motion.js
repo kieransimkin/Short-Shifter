@@ -52,10 +52,12 @@ globalThis.ShortShifterMotion = class {
     for (const property of ['height','max-height','padding-top','padding-bottom','margin-top','margin-bottom','border-top-width','border-bottom-width']) this.set(property, '0px', 'important');
     this.position();
     this.phase = 'wink'; this.mascot.dataset.phase = this.phase;
-    // Put the wink inside the same centred glyph box, not beside the poo.
-    const face = this.mascot.querySelector('.short-shifter-face');
     if (!this.reduced) {
-      await this.animate(face, [{ opacity: 0 }, { opacity: 1, offset: .15 }, { opacity: 1, offset: .85 }, { opacity: 0 }], { duration: 450 });
+      // A fresh URL restarts the non-looping GIF for each individual Short.
+      poo.src = chrome.runtime.getURL('assets/poo-wink-once.gif') + '?play=' + crypto.randomUUID();
+      await poo.decode().catch(() => {});
+      if (this.cancelled) return;
+      await this.animate(poo, [{ opacity: 1 }, { opacity: 1 }], { duration: 560 });
       if (!this.cancelled) await this.animate(this.mascot, [{ opacity: 1 }, { opacity: 0 }], { duration: 180 });
     }
     if (!this.cancelled) this.finish();

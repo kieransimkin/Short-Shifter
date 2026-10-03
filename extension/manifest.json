@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Short Shifter",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Hide YouTube Shorts behind a bouncing, winking poo.",
   "homepage_url": "https://github.com/kieransimkin/Short-Shifter",
   "permissions": [
@@ -50,6 +50,19 @@
         "content.js"
       ],
       "run_at": "document_idle"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "assets/poo-neutral.png",
+        "assets/poo-wink-once.gif"
+      ],
+      "matches": [
+        "https://www.youtube.com/*",
+        "https://youtube.com/*",
+        "https://m.youtube.com/*"
+      ]
     }
   ]
 }

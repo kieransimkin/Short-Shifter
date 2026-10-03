@@ -1,6 +1,6 @@
 <!doctype html><meta charset="utf-8"><title>Short Shifter sidebar regression</title>
 <style>body{font:16px system-ui;background:#eee;color:#222;padding:20px}#results{background:white;padding:18px;white-space:pre-wrap}#fixtures{display:flex;gap:20px;flex-wrap:wrap}ytd-reel-shelf-renderer,ytm-shorts-lockup-view-model-v2,ytd-compact-video-renderer,yt-lockup-view-model,grid-shelf-view-model{display:block;position:relative;width:250px;min-height:100px;background:#b9e0ff;margin:10px;padding:10px;box-sizing:border-box}a{display:block}img{display:block;width:160px;height:90px;background:#446}#portrait img{width:90px;height:160px}</style>
-<h1>Short Shifter v1.0.2 sidebar regression</h1><pre id="results">Running actual extension content scripts…</pre>
+<h1>Short Shifter v1.0.3 sidebar regression</h1><pre id="results">Running actual extension content scripts…</pre>
 <div id="fixtures">
 <ytd-reel-shelf-renderer id="shelf"><h2>Shorts shelf</h2><ytm-shorts-lockup-view-model-v2><a href="/shorts/shelf"><img alt="Short"></a></ytm-shorts-lockup-view-model-v2></ytd-reel-shelf-renderer>
 <ytm-shorts-lockup-view-model-v2 id="modern"><a href="/shorts/modern"><img alt="Modern card"></a></ytm-shorts-lockup-view-model-v2>
@@ -13,7 +13,7 @@
 </div>
 <script>
 const listeners={};
-window.chrome={storage:{local:{get:async()=>({shortsVisible:false})},onChanged:{addListener:f=>listeners.storage=f}},runtime:{onMessage:{addListener:f=>listeners.message=f}}};
+window.chrome={storage:{local:{get:async()=>({shortsVisible:false})},onChanged:{addListener:f=>listeners.storage=f}},runtime:{getURL:p=>new URL('../extension/'+p,location.href).href,onMessage:{addListener:f=>listeners.message=f}}};
 </script>
 <script src="../extension/detection.js"></script><script src="../extension/motion.js"></script><script src="../extension/content.js"></script>
 <script>
@@ -53,4 +53,3 @@ function check(name,condition){lines.push(`${condition?'PASS':'FAIL'} ${name}`);
  document.getElementById('results').textContent+=`\n\n${lines.length-failures}/${lines.length} passed`;
 })();
 </script>
-
