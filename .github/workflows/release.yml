@@ -17,16 +17,27 @@ jobs:
       - run: npm test
       - run: npm run check
       - run: npm run build
+      - name: Check exact release identity
+        env:
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          node --input-type=module -e "import fs from 'node:fs'; const p=JSON.parse(fs.readFileSync('package.json')); const m=JSON.parse(fs.readFileSync('dist/manifest.json')); if (process.env.RELEASE_TAG !== 'v'+p.version || m.version !== p.version) throw new Error('Release tag/package/extension versions differ');"
       - run: |
           version="${GITHUB_REF_NAME#v}"
           cd dist
           zip -qr "../short-shifter-${version}-chrome.zip" .
+          cd ..
+          sha256sum "short-shifter-${version}-chrome.zip" > SHA256SUMS.txt
       - uses: actions/upload-artifact@v4
         with:
           name: extension
-          path: short-shifter-*-chrome.zip
+          path: |
+            short-shifter-*-chrome.zip
+            SHA256SUMS.txt
       - uses: softprops/action-gh-release@v2
         with:
           generate_release_notes: true
-          files: short-shifter-*-chrome.zip
+          files: |
+            short-shifter-*-chrome.zip
+            SHA256SUMS.txt
 

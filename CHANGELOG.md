@@ -1,3 +1,7 @@
+## 1.0.4 - 2026-10-08
+
+- Add explicit agent capability, improvement, validation and upstream PR guidance to the README and contributor instructions.
+
 ## 1.0.3 — 3 October 2026
 
 - Replace the separate winking face with a transparent, one-shot wink of the original poo illustration, including three intermediate eye positions.

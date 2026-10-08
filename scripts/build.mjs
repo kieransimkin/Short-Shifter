@@ -8,6 +8,9 @@ for (const size of [16,32,48,128]) await access(path.join(source,'icons',`icon-$
 await rm(dist,{recursive:true,force:true});
 await mkdir(dist,{recursive:true});
 await cp(source,dist,{recursive:true});
+for (const file of ['README.md', 'AGENTS.md', 'CONTRIBUTING.md']) {
+  await cp(path.join(root, file), path.join(dist, file));
+}
 const manifest=JSON.parse(await readFile(path.join(dist,'manifest.json'),'utf8'));
 delete manifest.browser_specific_settings;
 await writeFile(path.join(dist,'manifest.json'),JSON.stringify(manifest,null,2)+'\n');
