@@ -2,6 +2,11 @@
 
 Cover YouTube Shorts with a bouncing, winking poo.
 
+Version 1.0.5 includes [Kieran's website](https://kieransimkin.co.uk/) in the
+installed extension's description and homepage link. Its name, permissions,
+local preferences and hiding behaviour remain the same. Short Shifter is an
+independent project, entirely unrelated to DanceFlow.
+
 Short Shifter recognises Shorts shelves, cards, links and badges, including recommendations beside a video. It also retains a roughly 9:16 media fallback outside ordinary video recommendation cards. With **Shorts visible** switched off, matching content is covered, the poo bounces three times, and its card collapses to zero height. The centred poo then winks and disappears. Turning visibility back on restores the original layout. Reduced-motion preferences skip the animation. This hides the card visually; it does not stop playback or audio. The portrait fallback can also match non-Shorts media. Your preference is stored locally; there is no analytics or remote runtime service.
 
 
@@ -15,7 +20,7 @@ Project website: [https://kieransimkin.co.uk/](https://kieransimkin.co.uk/).
 
 ## Free manual installation
 
-1. Download `short-shifter-1.0.4-chrome.zip` from [GitHub Releases](https://github.com/kieransimkin/Short-Shifter/releases/latest) and extract it to a permanent folder.
+1. Download `short-shifter-1.0.5-chrome.zip` from [GitHub Releases](https://github.com/kieransimkin/Short-Shifter/releases/latest) and extract it to a permanent folder.
 2. Open your browser's extensions page: `chrome://extensions`, `brave://extensions`, `edge://extensions`, `vivaldi://extensions`, or Opera's Extensions page.
 3. Turn on **Developer mode**, select **Load unpacked**, and choose the extracted folder containing `manifest.json`.
 4. Refresh YouTube and use the extension popup to switch **Shorts visible** on or off.
@@ -31,7 +36,7 @@ Keep the extracted folder in place. For an update, replace the files in your exi
 3. Copy **all files and folders** from the new ZIP into that existing folder, replacing files when prompted. Keep the same folder path, and make sure `manifest.json` sits directly inside it. Do not copy the ZIP or add an extra nested folder. New releases may add scripts, so do not replace only `content.js`.
 4. Open your browser's extensions page (`chrome://extensions`, `brave://extensions`, `edge://extensions`, `vivaldi://extensions`, or Opera's Extensions page). Find **Short Shifter** and click **Reload** (the circular arrow). Keep Developer mode enabled if needed to see this control.
 5. Refresh **every open YouTube tab** so it receives the new content scripts. Open the popup and check your **Shorts visible** setting.
-6. Check the version on the extension's card or **Details** page against the release you downloaded. For version **1.0.4**, the extracted folder must include `detection.js`, `motion.js`, `content.js` and the complete `assets` folder, and the manifest must say `1.0.4`.
+6. Check the version on the extension's card or **Details** page against the release you downloaded. For version **1.0.5**, the extracted folder must include `detection.js`, `motion.js`, `content.js` and the complete `assets` folder, and the manifest must say `1.0.5`.
 
 Reloading the same installation preserves its locally stored visibility preference. Avoid removing and reinstalling it just to upgrade, because removal can clear those settings. There are no automatic updates for this manually installed version.
 

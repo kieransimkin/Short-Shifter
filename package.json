@@ -1,6 +1,6 @@
 {
   "name": "short-shifter",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "private": true,
   "description": "Hide YouTube Shorts behind a bouncing, winking poo. https://kieransimkin.co.uk/",
   "type": "module",
